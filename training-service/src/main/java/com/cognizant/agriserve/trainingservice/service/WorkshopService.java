@@ -1,0 +1,26 @@
+package com.cognizant.agriserve.trainingservice.service;
+
+import com.cognizant.agriserve.trainingservice.dto.request.WorkshopRequestDTO;
+import com.cognizant.agriserve.trainingservice.dto.response.WorkshopResponseDTO;
+import java.util.List;
+
+public interface WorkshopService {
+
+    List<WorkshopResponseDTO> getAllWorkshops();
+
+    List<WorkshopResponseDTO> getActiveWorkshopsForFarmers();
+
+    // SECURITY: Added requesterId and isAdmin
+    WorkshopResponseDTO scheduleWorkshop(WorkshopRequestDTO requestDto, Long requesterId, boolean isAdmin);
+
+    List<WorkshopResponseDTO> getWorkshopsByOfficer(Long officerId);
+
+    // SECURITY: Added requesterId and isAdmin
+    WorkshopResponseDTO updateWorkshopStatus(Long workshopId, String status, Long requesterId, boolean isAdmin);
+
+    // SECURITY: Added requesterId and isAdmin
+    WorkshopResponseDTO updateWorkshop(Long workshopId, WorkshopRequestDTO requestDto, Long requesterId, boolean isAdmin);
+
+    // SECURITY: Added requesterId and isAdmin
+    void deleteWorkshop(Long workshopId, Long requesterId, boolean isAdmin);
+}
