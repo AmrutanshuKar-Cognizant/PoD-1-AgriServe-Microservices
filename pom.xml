@@ -19,6 +19,6 @@
         <module>training-service</module>
         <module>advisory-service</module>
         <module>api-gateway</module>
-        <module>feedbackandsatisfaction-service</module>
+        <module>feedbackandsatisfaction-service (old)</module>
     </modules>
 </project>

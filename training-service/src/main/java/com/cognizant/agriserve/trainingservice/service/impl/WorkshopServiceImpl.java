@@ -132,6 +132,13 @@ public class WorkshopServiceImpl implements WorkshopService {
     }
 
     @Override
+    public List<WorkshopResponseDTO> getWorkshopsByProgram(Long programId) {
+        return workshopRepository.findByTrainingProgram_ProgramId(programId).stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public void deleteWorkshop(Long workshopId, Long requesterId, String role) {
         // 1. RBAC Check
         if (role == null || (!role.equalsIgnoreCase("ADMIN") && !role.equalsIgnoreCase("PROGRAMMANAGER"))) {
@@ -148,6 +155,13 @@ public class WorkshopServiceImpl implements WorkshopService {
         }
 
         workshopRepository.delete(existingWorkshop);
+    }
+
+    @Override
+    public WorkshopResponseDTO getWorkshopById(Long workshopId) {
+        Workshop workshop = workshopRepository.findById(workshopId)
+                .orElseThrow(() -> new ResourceNotFoundException("Workshop", "ID", workshopId));
+        return convertToDto(workshop);
     }
 
     // --- Helper Methods ---

@@ -21,6 +21,9 @@ public class Workshop {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long workshopId;
 
+    @Column(nullable = false, length = 150)
+    private String title;
+
     @ManyToOne
     @JoinColumn(name = "programId")
     private TrainingProgram trainingProgram;

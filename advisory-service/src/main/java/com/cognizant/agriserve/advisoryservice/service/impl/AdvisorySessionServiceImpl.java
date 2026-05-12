@@ -99,7 +99,7 @@ public class AdvisorySessionServiceImpl implements AdvisorySessionService {
     public AdvisorySessionResponseDTO getAdvisoryById(Long id) {
 
         AdvisorySession session = sessionRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Advisory Session not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Advisory Session not found with ID: " + id));
 
         // 2. The Magic One-Liner!
         // This tells ModelMapper to look at 'session' and copy all matching fields into a new 'AdvisorySessionResponseDTO'

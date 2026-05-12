@@ -22,6 +22,7 @@
     <option name="ignoredFiles">
       <set>
         <option value="$PROJECT_DIR$/../Downloads/apiGateway/pom.xml" />
+        <option value="$PROJECT_DIR$/feedbackandsatisfaction-service (old)/pom.xml" />
       </set>
     </option>
   </component>

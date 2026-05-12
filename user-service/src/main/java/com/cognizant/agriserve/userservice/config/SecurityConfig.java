@@ -19,12 +19,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-@RequiredArgsConstructor // We can keep this for other dependencies if needed later
+@RequiredArgsConstructor
 public class SecurityConfig {
 
-    // 1. Pull the secret key directly from application.properties
-    @Value("${internal.service.key}")
-    private String internalServiceKey;
+    private final InternalServiceAuthFilter internalServiceAuthFilter;
 
     @Bean
     public ModelMapper modelMapper(){
@@ -38,20 +36,14 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
-        // 2. MANUALLY construct your filter here using the 'new' keyword!
-        InternalServiceAuthFilter customFilter = new InternalServiceAuthFilter(internalServiceKey);
-
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()
+                        .anyRequest().permitAll() // Let @PreAuthorize handle the specific rules
                 )
-                // 3. Add the manually created filter to the chain
-                .addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class);
+                // Inject your custom filter before the standard authentication filter
+                .addFilterBefore(internalServiceAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

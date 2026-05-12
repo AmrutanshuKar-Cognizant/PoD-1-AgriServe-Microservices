@@ -15,41 +15,36 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.List;
 
-@Slf4j
+@Component
 public class InternalServiceAuthFilter extends OncePerRequestFilter {
 
+    @Value("${internal.service.key}")
     private String internalServiceKey;
 
-    public InternalServiceAuthFilter(String internalServiceKey) {
-        this.internalServiceKey = internalServiceKey;
-    }
-
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        String headerKey = request.getHeader("X-Internal-service-key");
+        String requestInternalKey = request.getHeader("X-Internal-service-key");
+        String gatewayRole = request.getHeader("X-User-Role");
+        String username = request.getHeader("X-User-Name");
 
-        // Only process if the header actually exists in the request
-        if (headerKey != null) {
-            log.info("Received Internal Service Key from Feign Client: {}", headerKey);
+        if (internalServiceKey.equals(requestInternalKey)) {
+            var auth = new UsernamePasswordAuthenticationToken("internal", null, List.of(new SimpleGrantedAuthority("ROLE_SERVICE")));
+            SecurityContextHolder.getContext().setAuthentication(auth);
+        }
+        else if (gatewayRole != null && !gatewayRole.isEmpty()) {
 
-            if (headerKey.equals(internalServiceKey)) {
-                log.info("Key matched! Granting ROLE_SERVICE to this request.");
+            // --- CRITICAL FIX: Clean up the Double Header Bug here ---
+            // If Feign sends "SERVICE, SERVICE", this safely reduces it to "SERVICE"
+            gatewayRole = gatewayRole.split(",")[0].trim();
 
-                // Construct the Spring Security Token
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-                        "INTERNAL_SERVICE",
-                        null,
-                        List.of(new SimpleGrantedAuthority("ROLE_SERVICE")) // Must exactly match the Controller!
-                );
+            String finalRole = gatewayRole.startsWith("ROLE_") ? gatewayRole : "ROLE_" + gatewayRole;
+            var auth = new UsernamePasswordAuthenticationToken(username, null, List.of(new SimpleGrantedAuthority(finalRole)));
 
-                // Inject it into the Security Context
-                SecurityContextHolder.getContext().setAuthentication(auth);
-            } else {
-                log.warn("Key MISMATCH! Expected: {} but got: {}", internalServiceKey, headerKey);
-            }
+            SecurityContextHolder.getContext().setAuthentication(auth);
+        }
+        else {
+            SecurityContextHolder.clearContext();
         }
 
         filterChain.doFilter(request, response);

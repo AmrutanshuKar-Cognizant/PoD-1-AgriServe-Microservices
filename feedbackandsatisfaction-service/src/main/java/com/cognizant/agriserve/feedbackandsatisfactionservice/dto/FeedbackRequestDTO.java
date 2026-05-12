@@ -15,7 +15,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class FeedbackRequestDTO {
     private Long sessionId;
-
     @NotNull(message = "Farmer Id should not be null")
     private Long farmerId;
 

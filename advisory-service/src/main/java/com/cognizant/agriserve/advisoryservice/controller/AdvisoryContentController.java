@@ -32,7 +32,7 @@ public class AdvisoryContentController {
     }
 
     @GetMapping("/active")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('Admin', 'ProgramManager', 'Farmer', 'ExtensionOfficer')")
     public ResponseEntity<List<AdvisoryContentResponseDTO>> getActiveContent() {
         return ResponseEntity.ok(contentService.getAllActiveContent());
     }

@@ -1,14 +1,13 @@
 package com.cognizant.agriserve.userservice.service;
 
-import com.cognizant.agriserve.userservice.dto.RegisterRequestDTO;
-import com.cognizant.agriserve.userservice.dto.UserDTO;
-import com.cognizant.agriserve.userservice.dto.UserRequestDTO;
-import com.cognizant.agriserve.userservice.dto.UserResponseDTO;
+import com.cognizant.agriserve.userservice.dto.*;
 import com.cognizant.agriserve.userservice.entity.User;
 
 import java.util.List;
 
 public interface UserService {
+    UserResponseDTO createUser(CreateUserRequestDTO requestDTO);
+
     String getUserNameById(Long userId);
 
     UserResponseDTO getUserById(Long userId);
@@ -23,7 +22,7 @@ public interface UserService {
 
     UserResponseDTO updateUser(Long userId, UserRequestDTO updatedUserDTO);
 
-    void deactivateUser(Long userId);
+//    void deactivateUser(Long userId);
 
     void deleteUser(Long userId);
 

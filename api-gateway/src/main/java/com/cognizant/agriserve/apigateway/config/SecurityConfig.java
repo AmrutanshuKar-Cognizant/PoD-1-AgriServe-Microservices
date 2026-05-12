@@ -54,7 +54,7 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
 
         // Allow the preflight OPTIONS method, plus standard methods
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
 
         // Allow headers that Angular will send (like Authorization and custom headers)
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Logged-In-User-Id", "X-User-Role"));

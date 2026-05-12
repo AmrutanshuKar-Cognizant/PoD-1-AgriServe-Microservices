@@ -29,6 +29,7 @@ public class AuthService {
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
 
+
     public String register(RegisterRequestDTO dto) {
         log.info("Attempting to register new Farmer with email: {}", dto.getEmail());
 
@@ -38,7 +39,6 @@ public class AuthService {
         // 2. Save to User Service & Capture the Response
         UserDTO savedUser = userClient.register(dto);
 
-        // CRITICAL: Check if savedUser or userId is null before proceeding
         if (savedUser == null || savedUser.getUserId() == null) {
             log.error("Registration failed: User Service returned a null ID. Check UserDTO mapping.");
             throw new RuntimeException("User registration failed: User ID was not generated.");
@@ -46,20 +46,33 @@ public class AuthService {
 
         log.info("User created successfully with ID: {}. Linking Farmer profile...", savedUser.getUserId());
 
-        // 3. Explicitly set the userId into the DTO for the Farmer Service call
+        // Explicitly set the userId into the DTO for the Farmer Service call
         dto.setUserId(savedUser.getUserId());
 
-        // 4. Save to Farmer Service
+        // 3. Save to Farmer Service with Compensating Transaction (Rollback)
         try {
             farmerClient.registerFarmer(dto);
             log.info("Successfully registered farmer profile in FARMER-SERVICE for User ID: {}", savedUser.getUserId());
-        } catch (Exception e) {
-            log.error("Farmer Profile Creation Failed for User ID: {}. Error: {}", savedUser.getUserId(), e.getMessage());
-            // Since the user is already saved in USERSERVICE, we throw an error to alert the user
-            throw new RuntimeException("User account created, but Farmer profile failed. Error: " + e.getMessage());
-        }
 
-        return "Farmer registered successfully with ID: " + savedUser.getUserId();
+            return "Farmer registered successfully with ID: " + savedUser.getUserId();
+
+        } catch (Exception e) {
+            log.error("Farmer Profile Creation Failed for User ID: {}. Initiating rollback...", savedUser.getUserId());
+
+            // COMPENSATING TRANSACTION: Delete the user that was just created
+            try {
+                // Note: Make sure 'deleteUser' exists in your userClient interface!
+                userClient.deleteUser(savedUser.getUserId());
+                log.info("Rollback successful: Deleted orphaned user ID: {}", savedUser.getUserId());
+            } catch (Exception rollbackEx) {
+                // If the rollback fails, we have a critical data inconsistency requiring manual intervention
+                log.error("CRITICAL DATA INCONSISTENCY: Rollback failed for User ID: {}. An orphaned record exists in the User database! Rollback Error: {}",
+                        savedUser.getUserId(), rollbackEx.getMessage());
+            }
+
+            // Alert the frontend/user that the process failed
+            throw new RuntimeException("Registration failed during Farmer profile setup. Account creation was rolled back. Reason: " + e.getMessage());
+        }
     }
 
     public LoginResponseDTO login(LoginRequestDTO dto) {
@@ -83,6 +96,14 @@ public class AuthService {
 
         String token = jwtUtil.generateToken(userDetails.getUsername(), role, userId);
 
-        return new LoginResponseDTO(token, userId, role);
+        // 👇 UPDATED RETURN STATEMENT
+        return new LoginResponseDTO(
+                token,
+                userId,
+                role,
+                userDetails.getName(),        // Fetched from CustomUserDetails
+                userDetails.getUsername(),    // getUsername() returns the email
+                userDetails.getContactInfo()  // Fetched from CustomUserDetails
+        );
     }
 }

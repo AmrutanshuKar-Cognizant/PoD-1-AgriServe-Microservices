@@ -21,7 +21,6 @@ public class Farmer {
         PENDING,
         ACTIVE,
         INACTIVE,
-        SUSPENDED
     }
 
     @Id
@@ -54,7 +53,7 @@ public class Farmer {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Status status = Status.PENDING;
+    private Status status = Status.ACTIVE;
 
     @Column(name="user_id", nullable = false, unique = true)
     private Long userId;

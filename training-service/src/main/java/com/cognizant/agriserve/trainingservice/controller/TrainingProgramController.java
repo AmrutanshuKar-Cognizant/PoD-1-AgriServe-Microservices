@@ -41,8 +41,9 @@ public class TrainingProgramController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ProgramManager', 'Admin', 'Farmer', 'ExtensionOfficer')")
+    @PreAuthorize("hasAnyRole('ProgramManager', 'Admin', 'Farmer', 'ExtensionOfficer', 'ComplianceOfficer')")
     public ResponseEntity<List<TrainingProgramResponseDTO>> getAllPrograms() {
+        log.info("getAllPrograms called");
         return ResponseEntity.ok(programService.getAllPrograms());
     }
 

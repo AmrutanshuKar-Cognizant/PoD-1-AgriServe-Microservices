@@ -48,7 +48,7 @@ public class AdvisorySessionController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('Admin', 'ProgramManager', 'ComplianceOfficer')")
+    @PreAuthorize("hasAnyRole('Admin', 'ProgramManager', 'ComplianceOfficer', 'ExtensionOfficer')")
     public ResponseEntity<List<AdvisorySessionResponseDTO>> getAllSessions() {
         return ResponseEntity.ok(sessionService.findAllSessions());
     }

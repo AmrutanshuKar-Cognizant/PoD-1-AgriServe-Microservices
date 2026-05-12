@@ -47,18 +47,19 @@ public class DataSeeder {
                 workshop.setLocation("Community Hall, Pune");
                 workshop.setDate(LocalDateTime.now().plusDays(12));
                 workshop.setStatus("Scheduled");
-                workshop.setOfficerId(2L); // Links to ExtensionOfficer (test user ID 2)
+                workshop.setOfficerId(2L);
+                workshop.setTitle("Workshop 1");
                 
                 Workshop savedWorkshop = workshopRepository.save(workshop);
 
-                // 3. Create a Participation
-                Participation participation = new Participation();
-                participation.setWorkshop(savedWorkshop);
-                participation.setFarmerId(3L); // Links to Farmer (test user ID 3)
-                participation.setAttendanceStatus("Pending");
-                participation.setFeedback("Looking forward to this!");
-
-                participationRepository.save(participation);
+//                // 3. Create a Participation
+//                Participation participation = new Participation();
+//                participation.setWorkshop(savedWorkshop);
+//                participation.setFarmerId(3L); // Links to Farmer (test user ID 3)
+//                participation.setAttendanceStatus("Pending");
+//                participation.setFeedback("Looking forward to this!");
+//
+//                participationRepository.save(participation);
 
                 log.info("Test data seeding complete! You can now log in and test endpoints.");
             } else {

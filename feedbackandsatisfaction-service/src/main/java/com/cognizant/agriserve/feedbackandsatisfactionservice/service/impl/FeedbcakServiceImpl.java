@@ -44,10 +44,17 @@ public class FeedbcakServiceImpl implements FeedbackService {
                 ? auth.getAuthorities().iterator().next().getAuthority().replace("ROLE_", "")
                 : "SERVICE";
 
+        AdvisorySessionDTO ad=null;
+        TrainingProgramDTO dt=null;
         // 2. Validate and Fetch External Entities using Strict Exception Handling
-        AdvisorySessionDTO ad = fetchAdvisorySessionSafely(dto.getSessionId());
+        if(dto.getSessionId()!=null) {
+            ad = fetchAdvisorySessionSafely(dto.getSessionId());
+        }
+
         FarmerDTO fd = fetchFarmerSafely(dto.getFarmerId(), currentRole);
-        TrainingProgramDTO dt = fetchTrainingProgramSafely(dto.getProgramId(), currentRole);
+        if(dto.getProgramId()!=null) {
+             dt = fetchTrainingProgramSafely(dto.getProgramId(), currentRole);
+        }
 
         // 3. Save to Local Database
         Feedback feedback = FeedbackUtil.tofeedback(dto);
@@ -56,7 +63,7 @@ public class FeedbcakServiceImpl implements FeedbackService {
         return FeedbackResponseDTO.builder()
                 .feedbackId(ft.getFeedbackId())
                 .farmerName(fd.getName())
-                .programName(dt.getTitle())
+                .programName(dt != null ? dt.getTitle() : "N/A")
                 .rating(ft.getRating())
                 .comments(ft.getComments())
                 .build();

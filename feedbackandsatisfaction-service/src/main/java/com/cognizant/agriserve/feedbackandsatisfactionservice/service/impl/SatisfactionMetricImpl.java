@@ -64,6 +64,8 @@ public class SatisfactionMetricImpl implements SatisfactionMetricService {
         SatisfactionMetric metric = new SatisfactionMetric();
         metric.setTrainingProgramId(dto.getProgramId());
         metric.setScore(averageScore);
+        metric.setProgramManagerId(dto.getManagerId());
+        metric.setDate(dto.getDate());
         metric.setStatus(dto.getStatus() != null ? dto.getStatus() : "EVALUATED");
 
         SatisfactionMetric savedMetric = metricRepo.save(metric);

@@ -21,6 +21,10 @@ public interface WorkshopService {
     // SECURITY: Added requesterId and isAdmin
     WorkshopResponseDTO updateWorkshop(Long workshopId, WorkshopRequestDTO requestDto, Long requesterId, String role);
 
+    List<WorkshopResponseDTO> getWorkshopsByProgram(Long programId);
+
     // SECURITY: Added requesterId and isAdmin
     void deleteWorkshop(Long workshopId, Long requesterId, String role);
+
+    WorkshopResponseDTO getWorkshopById(Long workshopId);
 }

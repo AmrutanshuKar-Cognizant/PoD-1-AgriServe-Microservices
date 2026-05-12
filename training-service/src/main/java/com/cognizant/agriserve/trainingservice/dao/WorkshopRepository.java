@@ -13,6 +13,6 @@ public interface WorkshopRepository extends JpaRepository<Workshop, Long> {
 
     List<Workshop> findByOfficerId(Long officerId);
 
-    List<Workshop> findByTrainingProgram_ProgramIdAndDateAfter(Long programId, LocalDateTime date);
+    List<Workshop> findByTrainingProgram_ProgramId(Long programId);
 }
 

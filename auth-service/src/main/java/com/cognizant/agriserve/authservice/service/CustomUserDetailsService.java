@@ -36,11 +36,14 @@ public class CustomUserDetailsService implements UserDetailsService {
             authorities.add(new SimpleGrantedAuthority(user.getRole()));
         }
 
+        // 👇 UPDATED RETURN STATEMENT
         return new CustomUserDetails(
                 user.getEmail(),
                 user.getPassword(),
                 authorities,
-                user.getUserId()
+                user.getUserId(),
+                user.getName(),         // Pass name
+                user.getContactInfo()   // Pass contact info
         );
     }
 }

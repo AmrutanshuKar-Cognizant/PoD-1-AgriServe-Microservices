@@ -23,6 +23,8 @@ public class ComplianceRecord {
 
     public enum ComplianceType {
         ADVISORY,
+        ADVISORY_SESSION,
+        TRAINING_PROGRAM,
         TRAINING
     }
 
@@ -37,7 +39,7 @@ public class ComplianceRecord {
     private Long officerId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "compliance_type", nullable = false)
+    @Column(name = "compliance_type", nullable = false, length = 50)
     private ComplianceType type;
 
     @Column(nullable = false)

@@ -88,4 +88,22 @@ public class WorkshopController {
     public ResponseEntity<List<WorkshopResponseDTO>> getWorkshopsByOfficer(@PathVariable Long officerId) {
         return ResponseEntity.ok(workshopService.getWorkshopsByOfficer(officerId));
     }
+
+    @GetMapping("/program/{programId}")
+    @PreAuthorize("hasAnyRole('ProgramManager', 'Admin', 'ExtensionOfficer', 'Farmer')")
+    public ResponseEntity<List<WorkshopResponseDTO>> getWorkshopsByProgram(@PathVariable Long programId) {
+        return ResponseEntity.ok(workshopService.getWorkshopsByProgram(programId));
+    }
+
+    @GetMapping("/{workshopId}")
+    @PreAuthorize("hasAnyRole('ExtensionOfficer', 'ProgramManager', 'Admin', 'Farmer')")
+    public ResponseEntity<WorkshopResponseDTO> getWorkshopById(
+            @PathVariable Long workshopId) {
+
+        log.info("Request received to fetch workshop with ID: {}", workshopId);
+
+        WorkshopResponseDTO workshop = workshopService.getWorkshopById(workshopId);
+
+        return ResponseEntity.ok(workshop);
+    }
 }

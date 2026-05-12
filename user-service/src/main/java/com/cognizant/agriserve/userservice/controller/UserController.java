@@ -1,9 +1,6 @@
 package com.cognizant.agriserve.userservice.controller;
 
-import com.cognizant.agriserve.userservice.dto.RegisterRequestDTO;
-import com.cognizant.agriserve.userservice.dto.UserDTO;
-import com.cognizant.agriserve.userservice.dto.UserRequestDTO;
-import com.cognizant.agriserve.userservice.dto.UserResponseDTO;
+import com.cognizant.agriserve.userservice.dto.*;
 import com.cognizant.agriserve.userservice.entity.User;
 import com.cognizant.agriserve.userservice.service.impl.UserServiceImpl;
 
@@ -26,6 +23,17 @@ import java.util.List;
 public class UserController {
 
     private final UserServiceImpl userService;
+
+    @PostMapping
+    @PreAuthorize("hasRole('Admin')")
+    public ResponseEntity<UserResponseDTO> createUser(
+            @Valid @RequestBody CreateUserRequestDTO requestDTO) {
+
+        log.info("Request received from Admin to create a new user: {}", requestDTO.getEmail());
+        UserResponseDTO createdUser = userService.createUser(requestDTO);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+    }
 
     @GetMapping("/{userId}/name")
     @PreAuthorize("hasAnyRole('Admin', 'SERVICE')")
@@ -64,7 +72,7 @@ public class UserController {
     }
 
     @GetMapping("/role/{role}")
-    @PreAuthorize("hasRole('Admin')")
+    @PreAuthorize("hasAnyRole('Admin', 'ProgramManager')")
     public ResponseEntity<List<UserResponseDTO>> getUsersByRole(
             @PathVariable User.Role role) {
 
@@ -92,15 +100,15 @@ public class UserController {
                 userService.updateUser(userId, userRequestDTO));
     }
 
-    @PutMapping("/{userId}/deactivate")
-    @PreAuthorize("hasRole('Admin')")
-    public ResponseEntity<Void> deactivateUser(
-            @PathVariable Long userId) {
-
-        log.info("Request received to deactivate user with ID: {}", userId);
-        userService.deactivateUser(userId);
-        return ResponseEntity.noContent().build();
-    }
+//    @PutMapping("/{userId}/deactivate")
+//    @PreAuthorize("hasRole('Admin')")
+//    public ResponseEntity<Void> deactivateUser(
+//            @PathVariable Long userId) {
+//
+//        log.info("Request received to deactivate user with ID: {}", userId);
+//        userService.deactivateUser(userId);
+//        return ResponseEntity.noContent().build();
+//    }
 
     @DeleteMapping("/{userId}")
     @PreAuthorize("hasRole('Admin')")

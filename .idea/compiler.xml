@@ -10,15 +10,6 @@
         <module name="api-gateway" />
         <module name="service-registry" />
       </profile>
-      <profile name="Annotation profile for compliance-service" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.42/lombok-1.18.42.jar" />
-        </processorPath>
-        <module name="compliance-service" />
-      </profile>
       <profile name="Annotation profile for microservices" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -32,7 +23,7 @@
         <module name="training-service" />
         <module name="advisory-service" />
       </profile>
-      <profile name="Annotation profile for farmer-service" enabled="true">
+      <profile name="Annotation profile for Feedback and Satisfaction Service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -40,20 +31,14 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.42/lombok-1.18.42.jar" />
         </processorPath>
         <module name="farmer-service" />
-      </profile>
-      <profile name="Annotation profile for feedbackandsatisfaction-service" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.42/lombok-1.18.42.jar" />
-        </processorPath>
         <module name="feedbackandsatisfaction-service" />
+        <module name="compliance-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="apigateway (1)" target="17" />
       <module name="apiGateway (1) (com.cognizant)" target="17" />
+      <module name="feedbackandsatisfaction-service (old)" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
@@ -67,6 +52,7 @@
       <module name="config-server" options="-parameters" />
       <module name="farmer-service" options="-parameters" />
       <module name="feedbackandsatisfaction-service" options="-parameters" />
+      <module name="feedbackandsatisfaction-service (old)" options="-parameters" />
       <module name="service-registry" options="-parameters" />
       <module name="training-service" options="-parameters" />
       <module name="user-service" options="-parameters" />

@@ -12,7 +12,8 @@ public class WorkshopResponseDTO {
 
     private Long workshopId;
     private Long programId;
-    private String programTitle; // We still populate this so the frontend UI looks nice!
+    private String programTitle;
+    private String title;
     private Long officerId;
     private String location;
     private LocalDateTime date;
